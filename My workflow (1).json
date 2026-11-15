@@ -1,0 +1,531 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        272,
+        0
+      ],
+      "id": "b04f2e51-64a3-4379-ae99-99254b5870bd",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "17xaiCZpKTODkohgtE6WZ1Uq0p3NfZJzgS6-sSiBU7CE",
+          "mode": "list",
+          "cachedResultName": "Fintech Outreach Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17xaiCZpKTODkohgtE6WZ1Uq0p3NfZJzgS6-sSiBU7CE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17xaiCZpKTODkohgtE6WZ1Uq0p3NfZJzgS6-sSiBU7CE/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        496,
+        0
+      ],
+      "id": "81d5cd68-8639-4535-a0bd-e909df1f2727",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Kg1Xu4jDqtwrsvKU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a professional business development email assistant working with ECONOMIQ Group.\n\nYour task is to write personalised, professional, concise introductory emails to fintech founders, CEOs and senior executives about the Malta Permanent Residence Programme (MPRP).\n\nThe sender is Lord, an ECONOMIQ Group collaboration and referral partner. He is not claiming to be a licensed immigration agent.\n\nWriting rules:\n1. Address the prospect by their first name.\n2. Mention their company naturally.\n3. Introduce the Malta Permanent Residence Programme as an opportunity they may wish to explore for themselves and their families.\n4. Explain the potential benefits in clear, professional language.\n5. Do not promise approval, guaranteed residency or guaranteed processing times.\n6. Do not describe Schengen travel as unrestricted.\n7. Explain that applications are handled through the appropriate licensed agent.\n8. Mention that Lord can introduce interested prospects to ECONOMIQ Group and discuss available referral discounts.\n9. End by inviting the prospect to reply \"Hi\" to arrange a brief introductory conversation.\n10. Do not invent personal details about the prospect.\n\nReturn:\nSUBJECT: [email subject]\n\nEMAIL:\n[complete email draft]"
+            },
+            {
+              "content": "=Write an introductory email using the following prospect information:\n\nFirst name: {{ $json[\"First Name\"] }}\nLast name: {{ $json[\"Last Name\"] }}\nCompany: {{ $json[\"Company\"] }}\nJob title: {{ $json[\"Job Title\"] }}\nCountry: {{ $json[\"Country\"] }}\n\nUse the information provided. Do not invent anything that is missing."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        1616,
+        0
+      ],
+      "id": "29105b4a-e0a0-4901-9733-b3a123dc4b8e",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "FTFSpzCeIMTLI4qY",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "b400504b-d0aa-4f93-a207-e5dd97b10103",
+              "leftValue": "={{ $json[\"Approval\"] }}",
+              "rightValue": "Approved",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        720,
+        0
+      ],
+      "id": "13daa55b-a728-48ed-8693-ef165cf4bdda",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "1838b950-7461-4b16-80a5-77b0539337fa",
+              "leftValue": "={{ $json[\"Consent Status\"] }}",
+              "rightValue": "Yes",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        944,
+        0
+      ],
+      "id": "f81b5965-8088-4732-9b98-f1061611530a",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "42f4eef6-178e-4775-b818-1e45b42634c0",
+              "leftValue": "={{ $json[\"Unsubscribe\"] }}",
+              "rightValue": "No",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        1168,
+        0
+      ],
+      "id": "48230933-648d-4812-93f9-f2514bff164b",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "17xaiCZpKTODkohgtE6WZ1Uq0p3NfZJzgS6-sSiBU7CE",
+          "mode": "list",
+          "cachedResultName": "Fintech Outreach Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17xaiCZpKTODkohgtE6WZ1Uq0p3NfZJzgS6-sSiBU7CE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/17xaiCZpKTODkohgtE6WZ1Uq0p3NfZJzgS6-sSiBU7CE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $json[\"Email\"] }}",
+            "Status": "Ready for manual review",
+            "Email Subject": "={{ $json[\"Email Subject\"] }}",
+            "Email Body": "={{ $json[\"Email Body\"] }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "First Name",
+              "displayName": "First Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last Name",
+              "displayName": "Last Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Job Title",
+              "displayName": "Job Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Country",
+              "displayName": "Country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Product Fit",
+              "displayName": "Product Fit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Consent Status",
+              "displayName": "Consent Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email Subject",
+              "displayName": "Email Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Body",
+              "displayName": "Email Body",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Approval",
+              "displayName": "Approval",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Contacted",
+              "displayName": "Last Contacted",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Unsubscribe",
+              "displayName": "Unsubscribe",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        112
+      ],
+      "id": "1c69fe7d-4c93-4cea-a89a-e0b8c39b2d18",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Kg1Xu4jDqtwrsvKU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1392,
+        0
+      ],
+      "id": "0d265713-054a-4b82-8375-3c1ab79eaac5",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json[\"Email\"] }}",
+        "subject": "={{ $json[\"Email Subject\"] }}",
+        "message": "={{ $json[\"Email Body\"] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1200,
+        112
+      ],
+      "id": "207c4676-420b-4c2e-b8e0-a646d44af7c3",
+      "name": "Send a message",
+      "webhookId": "081e4233-19a9-4960-a618-f56e4fc31780",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XB7viRBfGSXu2A19",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "feacf3bc-77e9-44da-9351-52a873a8df55",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f38851221410045e5d8130f664e4cae240b8980ca29959cadd654410abaaa48b"
+  },
+  "nodeGroups": [],
+  "id": "2uvdxjxXcrkHZlGD",
+  "tags": []
+}
